@@ -2,11 +2,14 @@ import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Point
 
+import os
+from ament_index_python.packages import get_package_share_directory
 class WaypointPublisher(Node):
     def __init__(self):
         super().__init__('waypoint_publisher')
         self.publisher_ = self.create_publisher(Point, '/waypoints', 10)
-        self.timer = self.create_timer(1.0, self.publish_waypoint)
+        self.timer = self.create_timer(5.0, self.publish_waypoint)
+        # self.publish_waypoint
         self.counter = 0
 
     def publish_waypoint(self):
