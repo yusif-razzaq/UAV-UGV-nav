@@ -25,13 +25,13 @@ def generate_launch_description():
             remappings=[('/cmd_vel', '/cmd_vel_joy')]
          )
     
-    teleop_node2 = Node(
-            package='teleop_twist_joy',
-            executable='teleop_node',
-            name='teleop_node',
-            parameters=[joy_params, {'use_sim_time': use_sim_time}],
-            remappings=[('/cmd_vel', '/demo/cmd_vel')]
-         )
+    # teleop_node2 = Node(
+    #         package='teleop_twist_joy',
+    #         executable='teleop_node',
+    #         name='teleop_node',
+    #         parameters=[joy_params, {'use_sim_time': use_sim_time}],
+    #         remappings=[('/cmd_vel', '/demo/cmd_vel')]
+    #      )
 
     return LaunchDescription([
         DeclareLaunchArgument(
@@ -40,6 +40,6 @@ def generate_launch_description():
             description='Use sim time if true'),
         joy_node,
         teleop_node,
-        teleop_node2,
+        # teleop_node2,
         # twist_stamper       
     ])
