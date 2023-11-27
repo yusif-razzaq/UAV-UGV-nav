@@ -55,8 +55,8 @@ def generate_launch_description():
     #         output='screen',
     #     )
 
-    waypoints_pub_path = os.path.join(get_package_share_directory(package_name),'scripts','waypoints_publisher.py')
-    waypoints_sub_path = os.path.join(get_package_share_directory(package_name),'scripts','waypoints_subscriber.py')    
+    waypoints_pub_path = os.path.join(get_package_share_directory(package_name),'src','waypoints_publisher.py')
+    waypoints_sub_path = os.path.join(get_package_share_directory(package_name),'src','waypoints_subscriber.py')    
     waypoint_publisher = ExecuteProcess(
         cmd=['python3', '-u', waypoints_pub_path],  # Command to run the script
         output='screen',
@@ -83,11 +83,11 @@ def generate_launch_description():
 
     # Launch them all!
     return LaunchDescription([
-        # rsp,
-        # gazebo,
-        # spawn_entity,
-        # joystick,
-        # twist_mux,
+        rsp,
+        gazebo,
+        spawn_entity,
+        joystick,
+        twist_mux,
         waypoint_publisher,
         waypoint_subscriber
         # spawn_warehouse_bot,
