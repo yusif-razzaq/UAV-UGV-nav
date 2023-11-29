@@ -42,5 +42,6 @@ def generate_launch_description():
             'use_ros2_control',
             default_value='false',
             description='Use ros2 control'),
-        node_robot_state_publisher
+        node_robot_state_publisher,
+        # node_uav_state_publisher
     ])

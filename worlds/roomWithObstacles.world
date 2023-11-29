@@ -20,7 +20,7 @@
     </light>
     <model name='ground_plane'>
       <static>1</static>
-      <link name='link'>
+      <link name='link1'>
         <collision name='collision'>
           <geometry>
             <plane>
@@ -551,7 +551,7 @@
       <model name='Construction Cone'>
         <pose>1.72745 -1.84089 -0 0 -1e-06 0</pose>
         <scale>1 1 1</scale>
-        <link name='link'>
+        <link name='link2'>
           <pose>1.72745 -1.84089 -0 0 -1e-06 0</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>-0 0 0.008512 2.58585 -1.13682 -3.14159</acceleration>
@@ -561,7 +561,7 @@
       <model name='Construction Cone_0'>
         <pose>3.00918 -2.94909 -0 -0 -0 -0</pose>
         <scale>1 1 1</scale>
-        <link name='link'>
+        <link name='link3'>
           <pose>3.00918 -2.94909 -0 -0 -0 -0</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>1e-06 -0 16.3054 0.020837 0.031183 -0</acceleration>
@@ -571,7 +571,7 @@
       <model name='Construction Cone_0_clone'>
         <pose>-2.23401 -3.668 -8e-06 7e-06 -0 -1.2e-05</pose>
         <scale>1 1 1</scale>
-        <link name='link'>
+        <link name='link4'>
           <pose>-2.23401 -3.668 -8e-06 7e-06 -0 -1.2e-05</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>
@@ -581,7 +581,7 @@
       <model name='cube_20k'>
         <pose>3.76192 1.39211 -0 0 1e-06 -1.4e-05</pose>
         <scale>1 1 1</scale>
-        <link name='link'>
+        <link name='link5'>
           <pose>3.76192 1.39211 0.5 0 1e-06 -1.4e-05</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>1.07556 0.034258 -0.19878 3.07097 0.991637 3.13739</acceleration>
@@ -591,7 +591,7 @@
       <model name='cube_20k_clone'>
         <pose>-1.22587 0.424526 -0 0 1e-06 -1.4e-05</pose>
         <scale>1 1 1</scale>
-        <link name='link'>
+        <link name='link6'>
           <pose>-1.22587 0.424526 0.5 0 1e-06 -1.4e-05</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>1.07556 0.034258 -0.19878 3.07097 0.991637 3.13739</acceleration>
@@ -601,7 +601,7 @@
       <model name='ground_plane'>
         <pose>0 0 0 0 -0 0</pose>
         <scale>1 1 1</scale>
-        <link name='link'>
+        <link name='link7'>
           <pose>0 0 0 0 -0 0</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
@@ -675,7 +675,7 @@
       <model name='table'>
         <pose>-0.4822 -2.68249 0 0 0 -1.56786</pose>
         <scale>1 1 1</scale>
-        <link name='link'>
+        <link name='link8'>
           <pose>-0.4822 -2.68249 0 0 0 -1.56786</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
@@ -695,7 +695,7 @@
     </gui>
     <model name='table'>
       <static>1</static>
-      <link name='link'>
+      <link name='link9'>
         <collision name='surface'>
           <pose>0 0 1 0 -0 0</pose>
           <geometry>
@@ -734,7 +734,7 @@
             </script>
           </material>
         </visual>
-        <collision name='front_left_leg'>
+        <collision name='front_left_leg1'>
           <pose>0.68 0.38 0.5 0 -0 0</pose>
           <geometry>
             <cylinder>
@@ -756,7 +756,7 @@
             </friction>
           </surface>
         </collision>
-        <visual name='front_left_leg'>
+        <visual name='front_left_leg2'>
           <pose>0.68 0.38 0.5 0 -0 0</pose>
           <geometry>
             <cylinder>
@@ -771,7 +771,7 @@
             </script>
           </material>
         </visual>
-        <collision name='front_right_leg'>
+        <collision name='front_right_leg3'>
           <pose>0.68 -0.38 0.5 0 -0 0</pose>
           <geometry>
             <cylinder>
@@ -793,7 +793,7 @@
             </friction>
           </surface>
         </collision>
-        <visual name='front_right_leg'>
+        <visual name='front_right_leg4'>
           <pose>0.68 -0.38 0.5 0 -0 0</pose>
           <geometry>
             <cylinder>
@@ -808,7 +808,7 @@
             </script>
           </material>
         </visual>
-        <collision name='back_right_leg'>
+        <collision name='back_right_leg1'>
           <pose>-0.68 -0.38 0.5 0 -0 0</pose>
           <geometry>
             <cylinder>
@@ -830,7 +830,7 @@
             </friction>
           </surface>
         </collision>
-        <visual name='back_right_leg'>
+        <visual name='back_right_leg2'>
           <pose>-0.68 -0.38 0.5 0 -0 0</pose>
           <geometry>
             <cylinder>
@@ -845,7 +845,7 @@
             </script>
           </material>
         </visual>
-        <collision name='back_left_leg'>
+        <collision name='back_left_leg1'>
           <pose>-0.68 0.38 0.5 0 -0 0</pose>
           <geometry>
             <cylinder>
@@ -867,7 +867,7 @@
             </friction>
           </surface>
         </collision>
-        <visual name='back_left_leg'>
+        <visual name='back_left_leg2'>
           <pose>-0.68 0.38 0.5 0 -0 0</pose>
           <geometry>
             <cylinder>
@@ -889,7 +889,7 @@
       <pose>2.52434 -0.892335 0 0 -0 0</pose>
     </model>
     <model name='Construction Cone'>
-      <link name='link'>
+      <link name='link10'>
         <collision name='collision'>
           <geometry>
             <mesh>
@@ -938,7 +938,7 @@
       <pose>1.92351 -3.77659 0 0 -0 0</pose>
     </model>
     <model name='Construction Cone_0'>
-      <link name='link'>
+      <link name='link11'>
         <collision name='collision'>
           <geometry>
             <mesh>
@@ -987,7 +987,7 @@
       <pose>2.63698 -4.44747 0 0 -0 0</pose>
     </model>
     <model name='Construction Cone_0_clone'>
-      <link name='link'>
+      <link name='link12'>
         <collision name='collision'>
           <geometry>
             <mesh>
@@ -1036,7 +1036,7 @@
       <pose>-2.23705 -3.66749 -0 0 -0 0</pose>
     </model>
     <model name='cube_20k'>
-      <link name='link'>
+      <link name='link13'>
         <pose>0 0 0.5 0 -0 0</pose>
         <collision name='collision'>
           <geometry>
@@ -1086,7 +1086,7 @@
       <pose>3.76192 1.39211 0 0 -0 0</pose>
     </model>
     <model name='cube_20k_clone'>
-      <link name='link'>
+      <link name='link14'>
         <pose>0 0 0.5 0 -0 0</pose>
         <collision name='collision'>
           <geometry>

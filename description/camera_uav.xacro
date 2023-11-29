@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+   
+    <xacro:include filename="inertial_macros.xacro"/>
+
+    <material name="white">
+        <color rgba="1 1 1 1" />
+    </material>
+
+    <material name="orange">
+        <color rgba="1 0.3 0.1 1"/>
+    </material>
+
+    <material name="blue">
+        <color rgba="0.2 0.2 1 1"/>
+    </material>
+
+    <material name="black">
+        <color rgba="0 0 0 1"/>
+    </material>
+
+    <material name="red">
+        <color rgba="1 0 0 1"/>
+    </material>
+
+    <!-- BASE LINK -->
+
+    <link name="base_link"></link>
+
+
+    <!-- CHASSIS LINK -->
+
+    <joint name="chassis_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="chassis"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <link name="chassis">
+        <visual>
+            <origin xyz="0 0 0.005"/>
+            <geometry>
+            <!-- <box size="20 20 0.01"/> -->
+                <box size="0.3 0.3 0.01"/>
+            </geometry>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0.005"/>
+            <geometry>
+                <box size="0.3 0.3 0.01"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_box mass="0.5" x="0.3" y="0.3" z="0.01">
+            <origin xyz="0 0 0.005" rpy="0 0 0"/>
+        </xacro:inertial_box>
+    </link>
+
+    <gazebo reference="chassis">
+        <material>Gazebo/White</material>
+    </gazebo>
+    
+    <link name="camera_link_uav">
+        <visual>
+            <geometry>
+                <box size="0.05 0.03 0.03"/>
+            </geometry>
+        </visual>
+    </link>
+    
+    <joint name="uav_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="camera_link_uav"/>
+        <origin xyz="0 0 10" rpy="0 ${pi/2} 0"/>
+    </joint>
+
+    
+    <link name="camera_link_optical_uav"></link>
+    
+    <joint name="camera_optical_joint_uav" type="fixed">
+        <parent link="camera_link_uav" />
+        <child link="camera_link_optical_uav" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+    </joint>
+    
+    <gazebo reference="camera_link_uav">
+        <material>Gazebo/Red</material>
+        <sensor name="camera_uav" type="camera">
+            <pose> 0 0 0 0 0 0 </pose>
+            <visualize>true</visualize>
+            <update_rate>10</update_rate>
+            <camera>
+                <horizontal_fov>1.25</horizontal_fov>
+                <image>
+                    <format>R8G8B8</format>
+                    <width>1000</width>
+                    <height>1000</height>
+                </image>
+                <clip>
+                    <near>0.05</near>
+                    <far>15.0</far>
+                </clip>
+            </camera>
+            <plugin name="camera_controller_uav" filename="libgazebo_ros_camera.so">
+                <frame_name>camera_link_optical_uav</frame_name>
+            </plugin>
+        </sensor>
+    </gazebo>
+
+</robot>

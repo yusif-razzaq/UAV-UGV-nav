@@ -41,34 +41,69 @@
 
 cmake_minimum_required(VERSION 3.5)
 project(my_bot)
-
 # Default to C++17
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 14)
 
 # Find packages
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(tutorial_interfaces REQUIRED)
+find_package(cv_bridge REQUIRED)
+find_package(OpenCV REQUIRED)
+
 # find_package(your_package_msgs REQUIRED)  # Assuming your service definition is named your_package_msgs
 
 # Include directories
-include_directories(include)
+include_directories(
+    include
+    ${OpenCV_INCLUDE_DIRS} 
+)
 
 # Add executable
-add_executable(image_processor
-    scripts/image_processor.cpp
-)
+# set(SRC_FILES
+#     src/waypoints_server.cpp
+# )
+
+# Add the executable
+add_executable(waypoints_server src/waypoints_server.cpp)
+add_executable(waypoints_client src/waypoints_client.cpp)
+add_executable(nav2_handler src/nav2_handler.cpp)
 
 # Link libraries
-ament_target_dependencies(image_processor
+ament_target_dependencies(waypoints_server
     rclcpp
     sensor_msgs
-    # your_package_msgs
+    tutorial_interfaces
+    cv_bridge
+    OpenCV
 )
 
+ament_target_dependencies(waypoints_client
+    rclcpp
+    nav_msgs
+    tutorial_interfaces
+)
+
+ament_target_dependencies(nav2_handler
+    rclcpp
+    nav_msgs
+)
+
+target_link_libraries(waypoints_server
+  ${OpenCV_LIBS}
+)
 # Install
 install(TARGETS
-    image_processor
+    waypoints_server
+    waypoints_client
+    nav2_handler
+    DESTINATION lib/${PROJECT_NAME}
+)
+
+install(
+    DIRECTORY config description launch worlds
     DESTINATION lib/${PROJECT_NAME}
 )
 
