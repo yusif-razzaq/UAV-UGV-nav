@@ -56,16 +56,6 @@ def generate_launch_description():
             parameters=[twist_mux_params, {'use_sim_time': True}],
             remappings=[('/cmd_vel_out','/cmd_vel')]
         )
-    
-    # xacro_file_uav = os.path.join(get_package_share_directory(package_name),'description','robot.urdf.xacro')
-    # print(xacro_file_uav)
-    # uav_state_publisher = Node(
-    #     package='robot_state_publisher',
-    #     executable='robot_state_publisher',
-    #     name='robot_state_publisher_2',
-    #     # Pass the URDF file path for robot 2
-    #     arguments=[xacro_file_uav]
-    # )
 
     # waypoint_publisher = Node(
     #         package='my_bot',
@@ -83,22 +73,6 @@ def generate_launch_description():
     # waypoint_subscriber = ExecuteProcess(
     #     cmd=['python3', '-u', waypoints_sub_path],  # Command to run the script
     #     output='screen',
-    # )
-
-    # spawn_warehouse_bot = Node(package='warehouse_robot_spawner_pkg', executable='spawn_demo',
-    #                     arguments=['WarehouseBot', 'demo', '-1.5', '-4.0', '0.0'],
-    #                     output='screen')
-
-    # diff_drive_spawner = Node(
-    #     package="controller_manager",
-    #     executable="spawner",
-    #     arguments=["diff_cont"],
-    # )
-
-    # joint_broad_spawner = Node(
-    #     package="controller_manager",
-    #     executable="spawner",
-    #     arguments=["joint_broad"],
     # )
 
     waypoints_server_node = Node(
@@ -124,9 +98,9 @@ def generate_launch_description():
     return LaunchDescription([
         rsp,
         rsp_uav,
-        gazebo,
         spawn_robot,
-        spawn_uav
+        spawn_uav,
+        gazebo,
         # joystick,
         # twist_mux,
         # waypoints_server_node,
