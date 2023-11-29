@@ -48,7 +48,6 @@ class WaypointsClientNode : public rclcpp::Node {
                 }
 
                 auto result_future = waypoints_client_->async_send_request(request);
-                RCLCPP_INFO(this->get_logger(), "CLIENT READY TO SEND REQUEST");
                 // if (rclcpp::spin_until_future_complete(this->get_node_base_interface(), result_future) == rclcpp::FutureReturnCode::SUCCESS) {
                 //     auto result = result_future.get();
                 //     if (result) {

@@ -96,19 +96,15 @@ def generate_launch_description():
     
     # Launch them all!
     return LaunchDescription([
-        rsp,
+        # rsp,
         rsp_uav,
-        spawn_robot,
+        # spawn_robot,
         spawn_uav,
         gazebo,
         # joystick,
         # twist_mux,
-        # waypoints_server_node,
-        # waypoints_client_node,
-        # nav2_handler_node,
-        # uav_state_publisher
+        waypoints_server_node,
+        waypoints_client_node,
+        nav2_handler_node,
         # waypoint_publisher,
-        # spawn_warehouse_bot,
-        # diff_drive_spawner,
-        # joint_broad_spawner
     ])

@@ -58,6 +58,7 @@ find_package(OpenCV REQUIRED)
 # Include directories
 include_directories(
     include
+    includes
     ${OpenCV_INCLUDE_DIRS} 
 )
 
@@ -67,7 +68,7 @@ include_directories(
 # )
 
 # Add the executable
-add_executable(waypoints_server src/waypoints_server.cpp)
+add_executable(waypoints_server src/waypoints_server.cpp includes/processImage.cpp)
 add_executable(waypoints_client src/waypoints_client.cpp)
 add_executable(nav2_handler src/nav2_handler.cpp)
 
@@ -92,8 +93,9 @@ ament_target_dependencies(nav2_handler
 )
 
 target_link_libraries(waypoints_server
-  ${OpenCV_LIBS}
+    ${OpenCV_LIBS}
 )
+
 # Install
 install(TARGETS
     waypoints_server
@@ -103,7 +105,7 @@ install(TARGETS
 )
 
 install(
-    DIRECTORY config description launch worlds
+    DIRECTORY config description launch worlds includes
     DESTINATION share/${PROJECT_NAME}
 )
 

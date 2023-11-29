@@ -4,12 +4,14 @@
 #include "opencv2/opencv.hpp"
 #include <cv_bridge/cv_bridge.h>
 #include <opencv2/highgui.hpp>
+#include "processImage.h"
+#include <memory>
 
 class WaypointServerNode : public rclcpp::Node {
 public:
     WaypointServerNode() : Node("waypoints_server") {
         image_subscription_ = this->create_subscription<sensor_msgs::msg::Image>(
-            "image", 10,
+            "/camera_uav/image_raw", 10,
             std::bind(&WaypointServerNode::image_callback, this, std::placeholders::_1)
         );
 
@@ -22,21 +24,27 @@ public:
 
 private:
     void image_callback(const sensor_msgs::msg::Image::SharedPtr msg) {
-        // Process the received image using OpenCV
-        cv::Mat cv_image = process_image(msg);
-
-        // Store metadata
-        // auto image_metadata = extract_metadata(msg);
-        metadata_[msg->header.stamp] = 1;
+        if (warming == 3) {
+            RCLCPP_INFO(this->get_logger(), "SERVER PROCESSING IMAGE");
+            GridSpacePtr->setGrid(process_image(msg));
+            GridSpacePtr->runPRM({0, 0}, {1, 1}, 500);
+            // Store metadata
+            // auto image_metadata = extract_metadata(msg);
+            metadata_[msg->header.stamp] = 1;
+        } 
+        warming++;
     }
 
     cv::Mat process_image(const sensor_msgs::msg::Image::SharedPtr msg) {
-        // Use OpenCV to process the image data in C++
-        // Implement your image processing logic here
-        // For example:
         cv::Mat cv_image = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8)->image;
         cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
-        // ... Process the image using OpenCV
+
+        cv::Scalar lowerColor = cv::Scalar(155, 155, 155);  // Lower bound for (155, 155, 155)
+        cv::Scalar upperColor = cv::Scalar(155, 155, 155); 
+        cv::Mat mask;
+        cv::inRange(cv_image, lowerColor, upperColor, mask);
+        cv::imshow("CV Image", mask);
+        cv::waitKey(0);
         return cv_image;
     }
 
@@ -59,8 +67,11 @@ private:
         // );
     }
     
+    bool open = true;
+    int warming = 0;
     cv_bridge::CvImagePtr cv_ptr;
     std::map<rclcpp::Time, int> metadata_;
+    std::shared_ptr<GridSpace> GridSpacePtr = std::make_shared<GridSpace>();
     rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr image_subscription_;
     rclcpp::Service<tutorial_interfaces::srv::GetWaypoints>::SharedPtr waypoints_service_;
 };
