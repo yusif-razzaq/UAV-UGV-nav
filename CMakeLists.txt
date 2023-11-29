@@ -99,12 +99,12 @@ install(TARGETS
     waypoints_server
     waypoints_client
     nav2_handler
-    DESTINATION lib/${PROJECT_NAME}
+    DESTINATION share/${PROJECT_NAME}
 )
 
 install(
     DIRECTORY config description launch worlds
-    DESTINATION lib/${PROJECT_NAME}
+    DESTINATION share/${PROJECT_NAME}
 )
 
 ament_package()

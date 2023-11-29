@@ -17,6 +17,12 @@ def generate_launch_description():
                 )]), launch_arguments={'use_sim_time': 'true', 'use_ros2_control': 'false'}.items()
     )
 
+    rsp_uav = IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([os.path.join(
+                    get_package_share_directory(package_name),'launch','rsp_uav.launch.py'
+                )]), launch_arguments={'use_sim_time': 'true', 'use_ros2_control': 'false'}.items()
+    )
+
     gazebo_params_path = os.path.join(get_package_share_directory(package_name), 'config', 'gazebo_params.yaml')
 
     # Include the Gazebo launch file, provided by the gazebo_ros package
@@ -27,10 +33,16 @@ def generate_launch_description():
             )
 
     # Run the spawner node from the gazebo_ros package. The entity name doesn't really matter if you only have a single robot.
-    spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',
+    spawn_robot = Node(package='gazebo_ros', executable='spawn_entity.py', 
+                        name='spawn_robot',
                         arguments=['-topic', 'robot_description', '-entity', 'my_bot'],
                         output='screen')
     
+    spawn_uav = Node(package='gazebo_ros', executable='spawn_entity.py', 
+                    name='spawn_uav',
+                    arguments=['-topic', 'robot_description', '-entity', 'my_uav'],
+                    output='screen')
+
     joystick = IncludeLaunchDescription(
             PythonLaunchDescriptionSource([os.path.join(
                 get_package_share_directory(package_name),'launch','joystick.launch.py'
@@ -45,15 +57,15 @@ def generate_launch_description():
             remappings=[('/cmd_vel_out','/cmd_vel')]
         )
     
-    xacro_file_uav = os.path.join(get_package_share_directory(package_name),'description','robot.urdf.xacro')
-    print(xacro_file_uav)
-    uav_state_publisher = Node(
-        package='robot_state_publisher',
-        executable='robot_state_publisher',
-        name='robot_state_publisher_2',
-        # Pass the URDF file path for robot 2
-        arguments=[xacro_file_uav]
-    )
+    # xacro_file_uav = os.path.join(get_package_share_directory(package_name),'description','robot.urdf.xacro')
+    # print(xacro_file_uav)
+    # uav_state_publisher = Node(
+    #     package='robot_state_publisher',
+    #     executable='robot_state_publisher',
+    #     name='robot_state_publisher_2',
+    #     # Pass the URDF file path for robot 2
+    #     arguments=[xacro_file_uav]
+    # )
 
     # waypoint_publisher = Node(
     #         package='my_bot',
@@ -110,15 +122,17 @@ def generate_launch_description():
     
     # Launch them all!
     return LaunchDescription([
-        # rsp,
-        # gazebo,
-        # spawn_entity,
+        rsp,
+        rsp_uav,
+        gazebo,
+        spawn_robot,
+        spawn_uav
         # joystick,
         # twist_mux,
         # waypoints_server_node,
         # waypoints_client_node,
         # nav2_handler_node,
-        uav_state_publisher
+        # uav_state_publisher
         # waypoint_publisher,
         # spawn_warehouse_bot,
         # diff_drive_spawner,
