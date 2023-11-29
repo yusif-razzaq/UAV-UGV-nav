@@ -49,7 +49,7 @@
         <collision>
             <origin xyz="0 0 0.005"/>
             <geometry>
-                <box size="0.5 0.5 0.01"/>
+                <box size="0.1 0.1 0.01"/>
             </geometry>
         </collision>
         <xacro:inertial_box mass="50" x="0.3" y="0.3" z="0.01">
@@ -103,6 +103,7 @@
                 </clip>
             </camera>
             <plugin name="uav_camera_controller" filename="libgazebo_ros_camera.so">
+                <!-- <ros><namespace>/uav</namespace></ros> -->
                 <frame_name>camera_link_optical_uav</frame_name>
             </plugin>
         </sensor>

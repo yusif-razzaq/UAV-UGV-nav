@@ -3,17 +3,13 @@ import numpy as np
 
 def positionToPixels(position):
     # Given parameters
-    fov_horizontal_deg = 90  # Horizontal FOV in degrees
-    fov_vertical_deg = 90  # Vertical FOV in degrees
+    fov_horizontal_rad = 1.25
+    fov_vertical_rad = 1.25
     image_width = 1000  # Image width in pixels
     image_height = 1000  # Image height in pixels
 
     # Coordinates of the images
-    coord_image1 = np.array(position)  # (x, y, z) for image 1
-
-    # Convert FOV from degrees to radians
-    fov_horizontal_rad = np.radians(fov_horizontal_deg)
-    fov_vertical_rad = np.radians(fov_vertical_deg)
+    coord_image1 = np.array(position)
 
     # Calculate focal length in horizontal and vertical directions
     focal_length_horizontal = image_width / (2 * np.tan(fov_horizontal_rad / 2))

@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro"  name="uav">
 
-    <xacro:include filename="camera_uav.xacro" />
+    <!-- <xacro:include filename="camera_uav.xacro" /> -->
+    <xacro:include filename="uav.xacro" />
     <!-- <xacro:include filename="depth_camera_uav.xacro" /> -->
 
 </robot>

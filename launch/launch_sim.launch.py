@@ -38,9 +38,11 @@ def generate_launch_description():
                         arguments=['-topic', 'robot_description', '-entity', 'my_bot'],
                         output='screen')
     
+    uav_sdf = os.path.join(get_package_share_directory(package_name), 'description', 'uav.sdf')
+
     spawn_uav = Node(package='gazebo_ros', executable='spawn_entity.py', 
                     name='spawn_uav',
-                    arguments=['-topic', 'robot_description', '-entity', 'my_uav'],
+                    arguments=['-entity', 'my_uav', '-file', uav_sdf],
                     output='screen')
 
     joystick = IncludeLaunchDescription(
@@ -56,24 +58,6 @@ def generate_launch_description():
             parameters=[twist_mux_params, {'use_sim_time': True}],
             remappings=[('/cmd_vel_out','/cmd_vel')]
         )
-
-    # waypoint_publisher = Node(
-    #         package='my_bot',
-    #         executable=exec_waypoints,
-    #         output='screen',
-    #     )
-
-    # waypoints_pub_path = os.path.join(get_package_share_directory(package_name),'src','waypoints_publisher.py')
-    # waypoint_publisher = ExecuteProcess(
-    #     cmd=['python3', '-u', waypoints_pub_path],  # Command to run the script
-    #     output='screen',
-    # )
-
-    # waypoints_sub_path = os.path.join(get_package_share_directory(package_name),'src','waypoints_subscriber.py')    
-    # waypoint_subscriber = ExecuteProcess(
-    #     cmd=['python3', '-u', waypoints_sub_path],  # Command to run the script
-    #     output='screen',
-    # )
 
     waypoints_server_node = Node(
         package='my_bot',  # Replace with your package name
@@ -96,15 +80,15 @@ def generate_launch_description():
     
     # Launch them all!
     return LaunchDescription([
-        # rsp,
-        rsp_uav,
-        # spawn_robot,
-        spawn_uav,
+        rsp,
+        # rsp_uav,
         gazebo,
-        # joystick,
-        # twist_mux,
+        spawn_robot,
+        spawn_uav,
+        joystick,
+        twist_mux,
         waypoints_server_node,
         waypoints_client_node,
-        nav2_handler_node,
+        # nav2_handler_node,
         # waypoint_publisher,
     ])

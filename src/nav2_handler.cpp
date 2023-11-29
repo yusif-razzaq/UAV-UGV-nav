@@ -6,14 +6,12 @@ class Nav2Handler : public rclcpp::Node {
 public:
     Nav2Handler() : Node("nav2_handler") {
         subscription_ = this->create_subscription<geometry_msgs::msg::Point>(
-            "/waypoints",
-            10,
+            "/waypoints", 10,
             std::bind(&Nav2Handler::waypoint_callback, this, std::placeholders::_1)
         );
 
         nav_goal_publisher_ = this->create_publisher<geometry_msgs::msg::PoseStamped>(
-            "/goal_pose",
-            10
+            "/goal_pose", 10
         );
     }
 

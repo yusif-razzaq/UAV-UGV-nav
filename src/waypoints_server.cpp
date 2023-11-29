@@ -4,6 +4,7 @@
 #include "opencv2/opencv.hpp"
 #include <cv_bridge/cv_bridge.h>
 #include <opencv2/highgui.hpp>
+#include "geometry_msgs/msg/pose_stamped.hpp"
 #include "processImage.h"
 #include <memory>
 
@@ -24,14 +25,14 @@ public:
 
 private:
     void image_callback(const sensor_msgs::msg::Image::SharedPtr msg) {
-        if (warming == 3) {
-            RCLCPP_INFO(this->get_logger(), "SERVER PROCESSING IMAGE");
-            GridSpacePtr->setGrid(process_image(msg));
-            GridSpacePtr->runPRM({0, 0}, {1, 1}, 500);
-            // Store metadata
-            // auto image_metadata = extract_metadata(msg);
-            metadata_[msg->header.stamp] = 1;
-        } 
+        if (warming > 10) {
+            if (GridSpacePtr->getPoints().size() < 750) { 
+                RCLCPP_INFO(this->get_logger(), "SERVER PROCESSING IMAGE");
+                GridSpacePtr->setGrid(process_image(msg));
+                GridSpacePtr->runPRM({0, 0}, {1, 1}, 100);
+            } 
+            // else GridSpacePtr->showPRM(cv_ptr->image);
+        }
         warming++;
     }
 
@@ -43,9 +44,10 @@ private:
         cv::Scalar upperColor = cv::Scalar(155, 155, 155); 
         cv::Mat mask;
         cv::inRange(cv_image, lowerColor, upperColor, mask);
-        cv::imshow("CV Image", mask);
-        cv::waitKey(0);
-        return cv_image;
+        // bool success = cv::imwrite("image.png", cv_image);
+        // cv::imshow("CV Image", mask);
+        // cv::waitKey(0);
+        return mask;
     }
 
     void metadata_service_callback(
@@ -56,9 +58,22 @@ private:
         // Handle metadata service requests
         geometry_msgs::msg::Point start = request->start;
         geometry_msgs::msg::Point goal = request->goal;
+        Path path = GridSpacePtr->getWaypoints({start.x, start.y}, {goal.x, goal.y});
+        response->valid = path.valid;
+        RCLCPP_INFO(this->get_logger(), "SERVER WAYPOINTS RESPONSE");
+
+        for (const std::pair<double, double>& waypoint : path.waypoints) {
+            auto pose_msg = std::make_shared<geometry_msgs::msg::PoseStamped>();
+            pose_msg->header.frame_id = "map"; // Adjust the frame ID as necessary
+            pose_msg->pose.position.x = waypoint.first;
+            pose_msg->pose.position.y = waypoint.second;
+            pose_msg->pose.position.z = 0;
+            pose_msg->pose.orientation.w = 1.0; 
+            response->waypoints.push_back(*pose_msg);
+        }
+
         // Retrieve metadata based on image ID
         // response->waypoints.push_back(start);
-        response->waypoints.push_back(goal);
         // RCLCPP_INFO(
         //     rclcpp::get_logger("waypoints_server"),
         //     "Constructed waypoints: {%f, %f, %f}, {%f, %f, %f}, {%f, %f, %f}",
