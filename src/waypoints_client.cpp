@@ -16,12 +16,12 @@ class WaypointsClientNode : public rclcpp::Node {
 
             timer_ = create_wall_timer(10s, std::bind(&WaypointsClientNode::timer_callback, this));
             waypoints_publisher_ = this->create_publisher<geometry_msgs::msg::PoseStamped>(
-                "/waypoints", 10);
+                "/goal_pose", 10);
 
             waypoints_client_ = this->create_client<tutorial_interfaces::srv::GetWaypoints>("waypoints_service");
 
-            goal_pose_.x = 0.0; // Set goal pose {10, 10, 0}
-            goal_pose_.y = -5.0;
+            goal_pose_.x = -4.5; // Set goal pose {10, 10, 0}
+            goal_pose_.y = 3.0;
             goal_pose_.z = 0.0;
         }
 
@@ -82,10 +82,10 @@ class WaypointsClientNode : public rclcpp::Node {
                 auto response_received_callback = [this](ServiceResponseFuture future) {
                     auto result = future.get();
                     for (const auto& pose : result->waypoints) {
+                        open = false;
                         waypoints_publisher_->publish(pose);
                         RCLCPP_INFO(this->get_logger(), "Publishing waypoint to /waypoints");
-                        rclcpp::sleep_for(std::chrono::milliseconds(2000));
-                        open = false;
+                        rclcpp::sleep_for(std::chrono::milliseconds(3750));
                     }
                 };
                 RCLCPP_INFO(this->get_logger(), "CLIENT SENDING REQUEST");

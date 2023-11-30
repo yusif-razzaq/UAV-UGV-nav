@@ -15,7 +15,7 @@
         </inertia>
       </inertial>
       <sensor name='camera_uav' type='camera'>
-        <visualize>1</visualize>
+        <visualize>0</visualize>
         <update_rate>1</update_rate>
         <camera>
           <horizontal_fov>1.25</horizontal_fov>

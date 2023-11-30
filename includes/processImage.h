@@ -22,7 +22,7 @@ cv::Mat applyMask(const cv::Mat& image);
 
 class GridSpace {
     public:
-        // GridSpace(int w, int h) : width(w), height(h) {}
+        GridSpace(uint32_t maxNodes) : maxNodes(maxNodes) {}
         void fillGrid(const cv::Mat& image);
         void setGrid(const cv::Mat& image);
         void showPRM(const cv::Mat& image);
@@ -41,6 +41,7 @@ class GridSpace {
         std::map<uint32_t, std::pair<int, int>> getPoints();
     private:
         int width, height;
+        uint32_t maxNodes;
         double captureHeight = 10.0;
         cv::Mat grid; 
         std::map<uint32_t, std::pair<int, int>> points;

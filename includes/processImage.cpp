@@ -62,7 +62,7 @@ void GridSpace::runPRM(const std::pair<int, int>& init, const std::pair<int, int
     int ind = 0;
     std::pair<int, int> qRand;
     if (points.size() == 0) points[0] = {0, 0};
-    while (ind < n && points.size() < 750) {
+    while (ind < n && points.size() < maxNodes) {
         qRand = getRandomPoint();
         if (grid.at<uchar>(qRand.first, qRand.second) != 0) {
             points[points.size()] = qRand;
