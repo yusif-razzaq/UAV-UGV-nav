@@ -23,12 +23,13 @@ public:
             std::bind(&WaypointServerNode::metadata_service_callback, this,
                       std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
         );
-        maxNodes = 800;
+        maxNodes = 1000;
+        GridSpacePtr = std::make_shared<GridSpace>(maxNodes);
     }
 
 private:
     void image_callback(const sensor_msgs::msg::Image::SharedPtr msg) {
-        if (warming > 7) {
+        if (warming > 2) {
             if (GridSpacePtr->getPoints().size() < maxNodes) { 
                 RCLCPP_INFO(this->get_logger(), "SERVER PROCESSING IMAGE");
                 GridSpacePtr->setGrid(process_image(msg));
@@ -67,7 +68,7 @@ private:
         geometry_msgs::msg::Point goal = request->goal;
         Path path = GridSpacePtr->getWaypoints({start.x, start.y}, {goal.x, goal.y});
         response->valid = path.valid;
-        RCLCPP_INFO(this->get_logger(), "SERVER WAYPOINTS RESPONSE");
+        if (path.valid) RCLCPP_INFO(this->get_logger(), "SERVER WAYPOINTS RESPONSE");
 
     for (size_t i = 1; i < path.waypoints.size(); ++i) {
         // Extract previous and current waypoints
@@ -108,7 +109,7 @@ private:
     cv_bridge::CvImagePtr cv_ptr;
     std::map<rclcpp::Time, int> metadata_;
     uint32_t maxNodes;
-    std::shared_ptr<GridSpace> GridSpacePtr = std::make_shared<GridSpace>(maxNodes);
+    std::shared_ptr<GridSpace> GridSpacePtr;
     rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr image_subscription_;
     rclcpp::Service<tutorial_interfaces::srv::GetWaypoints>::SharedPtr waypoints_service_;
 };

@@ -31,36 +31,29 @@ class WaypointsClientNode : public rclcpp::Node {
             start_pose_.x = msg->pose.pose.position.x;
             start_pose_.y = msg->pose.pose.position.y;
             start_pose_.z = msg->pose.pose.position.z;
+            // RCLCPP_INFO(this->get_logger(), "Odom recieved");
+            if (waypoints_) {
+                if (waypoints_->valid && way_ind < waypoints_->waypoints.size()) {
+                    const auto waypoint = waypoints_->waypoints[way_ind];
+                    if (way_ind == 0){ 
+                        waypoints_publisher_->publish(waypoint);
+                        way_ind++;
+                    } else {
+                        double distance = sqrt(pow(waypoints_->waypoints[way_ind - 1].pose.position.x - start_pose_.x, 2) + pow(waypoints_->waypoints[way_ind-1].pose.position.y - start_pose_.y, 2));
+                        if (distance < 0.5) {
+                            RCLCPP_INFO(this->get_logger(), "Publishing waypoint to /waypoints");
+                            waypoints_publisher_->publish(waypoint);
+                            way_ind++;
+                        }
+                    }
 
-            // Send request to waypoints_service
-            // while (!waypoints_client_->wait_for_service(std::chrono::seconds(1))) {
-            //     if (!rclcpp::ok()) {
-            //         RCLCPP_ERROR(this->get_logger(), "Interrupted while waiting for service to appear.");
-            //         return;
-            //     }
-            //     RCLCPP_INFO(this->get_logger(), "service not available, waiting again...");
-            // }
-
-            // auto result_future = waypoints_client_->async_send_request(request);
-            // if (rclcpp::spin_until_future_complete(this->get_node_base_interface(), result_future) == rclcpp::FutureReturnCode::SUCCESS) {
-            //     auto result = result_future.get();
-            //     if (result) {
-            //         // Publish received waypoints response to "/waypoints" topic
-            //         for (const auto& point : result->waypoints) {
-            //             waypoints_publisher_->publish(point);
-            //             RCLCPP_INFO(this->get_logger(), "Publishing waypoint");
-            //         }
-            //     } else {
-            //         RCLCPP_ERROR(this->get_logger(), "Service call failed.");
-            //     }
-            // } else {
-            //     RCLCPP_ERROR(this->get_logger(), "Failed to call service.");
-            // }
+                }
+            }
         }
 
         void timer_callback() {
             // Create a request with the received start pose and goal pose
-            if (open) {
+            if (!waypoints_) {
                 auto request = std::make_shared<tutorial_interfaces::srv::GetWaypoints::Request>();
                 geometry_msgs::msg::Point start;
                 start.x = start_pose_.x;
@@ -71,49 +64,25 @@ class WaypointsClientNode : public rclcpp::Node {
 
                 // Send request to waypoints_service
                 while (!waypoints_client_->wait_for_service(std::chrono::seconds(1))) {
-                    if (!rclcpp::ok()) {
-                        RCLCPP_ERROR(this->get_logger(), "Interrupted while waiting for service to appear.");
-                        return;
-                    }
+                    if (!rclcpp::ok()) return;
                     RCLCPP_INFO(this->get_logger(), "service not available, waiting again...");
                 }
 
                 using ServiceResponseFuture = rclcpp::Client<tutorial_interfaces::srv::GetWaypoints>::SharedFuture;
                 auto response_received_callback = [this](ServiceResponseFuture future) {
                     auto result = future.get();
-                    for (const auto& pose : result->waypoints) {
-                        open = false;
-                        waypoints_publisher_->publish(pose);
-                        RCLCPP_INFO(this->get_logger(), "Publishing waypoint to /waypoints");
-                        rclcpp::sleep_for(std::chrono::milliseconds(3750));
-                    }
+                    if (result->valid) waypoints_ = result;
                 };
-                RCLCPP_INFO(this->get_logger(), "CLIENT SENDING REQUEST");
-
                 auto future_result = waypoints_client_->async_send_request(request, response_received_callback);
-
-                // if (rclcpp::spin_until_future_complete(this->get_node_base_interface(), result_future) == rclcpp::FutureReturnCode::SUCCESS) {
-                //     auto result = result_future.get();
-                //     if (result) {
-                //         // Publish received waypoints response to "/waypoints" topic
-                //         for (const auto& point : result->waypoints) {
-                //             waypoints_publisher_->publish(point);
-                //             RCLCPP_INFO(this->get_logger(), "Publishing waypoint");
-                //         }
-                //     } else {
-                //         RCLCPP_ERROR(this->get_logger(), "Service call failed.");
-                //     }
-                // } else {
-                //     RCLCPP_ERROR(this->get_logger(), "Failed to call service.");
-                // }
             }
         }
 
-        bool open = true;
         rclcpp::TimerBase::SharedPtr timer_ = nullptr;
         rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_subscriber_;
         rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr waypoints_publisher_;
         rclcpp::Client<tutorial_interfaces::srv::GetWaypoints>::SharedPtr waypoints_client_;
+        std::shared_ptr<tutorial_interfaces::srv::GetWaypoints::Response> waypoints_;
+        int way_ind = 0;
         geometry_msgs::msg::Point goal_pose_;
         geometry_msgs::msg::Point start_pose_;
 };

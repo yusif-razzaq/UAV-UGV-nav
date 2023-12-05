@@ -8,7 +8,7 @@ Note that each directory currently has at least one file in it to ensure that gi
 
 
 Lauch steps:
-- ros2 launch my_bot launch_sim.launch.py world:=./src/my_bot/worlds/roomWithObstacles.world
-- rviz2
-- ros2 launch slam_toolbox online_async_launch.py slam_params_file:=./src/my_bot/config/mapper_params_online_async.yaml use_sim_time:=true
-- ros2 launch nav2_bringup navigation_launch.py use_sim_time:=true
+ros2 launch my_bot launch_sim.launch.py world:=./src/my_bot/worlds/roomWithObstacles2.world
+rviz2
+ros2 launch slam_toolbox online_async_launch.py slam_params_file:=./src/my_bot/config/mapper_params_online_async.yaml use_sim_time:=true
+ros2 launch nav2_bringup navigation_launch.py use_sim_time:=true
